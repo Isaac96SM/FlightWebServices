@@ -17,7 +17,7 @@ namespace FlightWebServices
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Connection = cnn; cmd.CommandText = "InsertSale";
+            cmd.Connection = cnn; cmd.CommandText = "Flight_AssignSale";
             cmd.Parameters.AddWithValue("@RowID", parRow);
             cmd.Parameters.AddWithValue("@SeatID", parSeat);
             cmd.Parameters.AddWithValue("@TravelID", parTravel);
@@ -49,5 +49,31 @@ namespace FlightWebServices
                 return r;
             }
         }
-    }
+        public Customer[] GetCustomer()
+        {
+            SqlConnection cnn = new SqlConnection();
+            string cnnString = System.Configuration.ConfigurationManager.ConnectionStrings["DemoConnectionString"].ConnectionString;
+            cnn.ConnectionString = cnnString;
+            cnn.Open();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Connection = cnn; cmd.CommandText = "GetCustomer";
+
+            //Parametro de output
+            SqlParameter sqlParameterResult = new SqlParameter();
+            sqlParameterResult.SqlDbType = System.Data.SqlDbType.NVarChar;
+            sqlParameterResult.Size = 50;
+            sqlParameterResult.Direction = System.Data.ParameterDirection.Output;
+            sqlParameterResult.ParameterName = "@Result";
+
+            cmd.Parameters.Add(sqlParameterResult);
+
+            int count = cmd.ExecuteNonQuery();
+
+            Customer[] result = new Customer[count];
+
+            return result;
+        }
+      }
 }

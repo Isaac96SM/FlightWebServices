@@ -24,5 +24,13 @@ namespace FlightWebServices
             Response result = bm.DoSale(parRow, parSeat, parTravel, parCustomer);
             return result;
         }
+
+        [WebMethod]
+        public Customer[] GetCustomer()
+        {
+            FlightManager bm = new FlightManager();
+            Customer[] result = bm.GetCustomer();
+            return result;
+        }
     }
 }

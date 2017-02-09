@@ -76,6 +76,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Customer.cs" />
     <Compile Include="FlightManager.cs" />
     <Compile Include="InsertSale.asmx.cs">
       <DependentUpon>InsertSale.asmx</DependentUpon>
@@ -88,6 +89,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Travel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServiceReferenceFightManager\InsertSale.wsdl" />
