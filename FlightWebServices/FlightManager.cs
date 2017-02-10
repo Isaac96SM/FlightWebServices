@@ -49,7 +49,7 @@ namespace FlightWebServices
                 return r;
             }
         }
-        public Customer[] GetCustomer()
+        public List<Customer> GetCustomer()
         {
             SqlConnection cnn = new SqlConnection();
             string cnnString = System.Configuration.ConfigurationManager.ConnectionStrings["DemoConnectionString"].ConnectionString;
@@ -58,22 +58,35 @@ namespace FlightWebServices
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Connection = cnn; cmd.CommandText = "GetCustomer";
+            cmd.Connection = cnn; cmd.CommandText = "Flight_GetCustomers";
 
-            //Parametro de output
-            SqlParameter sqlParameterResult = new SqlParameter();
-            sqlParameterResult.SqlDbType = System.Data.SqlDbType.NVarChar;
-            sqlParameterResult.Size = 50;
-            sqlParameterResult.Direction = System.Data.ParameterDirection.Output;
-            sqlParameterResult.ParameterName = "@Result";
+            cmd.ExecuteNonQuery();
 
-            cmd.Parameters.Add(sqlParameterResult);
+            SqlDataReader reader = cmd.ExecuteReader();
 
-            int count = cmd.ExecuteNonQuery();
+            List<Customer> result = new List<Customer>();
 
-            Customer[] result = new Customer[count];
+            if(reader.HasRows)
+            {
+               while(reader.Read())
+                {
+                    Customer cust = new Customer();
+                    cust.Code = reader.GetInt32(0);
+                    cust.Name = reader.GetString(1);
+                    SmartAdd(result, cust);
+                }
+            }
 
             return result;
+        }
+        protected void SmartAdd(List<Customer> list, Customer cust)
+        {
+            Customer detail = list.SingleOrDefault(d => d.Code == cust.Code && d.Name == cust.Name);
+
+            if (detail == null)
+            {
+                list.Add(cust);
+            }
         }
       }
 }

@@ -26,10 +26,10 @@ namespace FlightWebServices
         }
 
         [WebMethod]
-        public Customer[] GetCustomer()
+        public List<Customer> GetCustomer()
         {
             FlightManager bm = new FlightManager();
-            Customer[] result = bm.GetCustomer();
+            List<Customer> result = bm.GetCustomer();
             return result;
         }
     }
