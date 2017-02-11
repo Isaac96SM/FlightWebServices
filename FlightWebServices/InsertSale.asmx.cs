@@ -32,5 +32,13 @@ namespace FlightWebServices
             List<Customer> result = bm.GetCustomer();
             return result;
         }
+
+        [WebMethod]
+        public List<Travel> GetTravel()
+        {
+            FlightManager bm = new FlightManager();
+            List<Travel> result = bm.GetTravel();
+            return result;
+        }
     }
 }
