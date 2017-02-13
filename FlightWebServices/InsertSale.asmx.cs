@@ -40,5 +40,21 @@ namespace FlightWebServices
             List<Travel> result = bm.GetTravel();
             return result;
         }
+
+        [WebMethod]
+        public Travel GetTravelSelected(int parCode)
+        {
+            FlightManager bm = new FlightManager();
+            Travel result = bm.GetTravelSelected(parCode);
+            return result;
+        }
+
+        [WebMethod]
+        public List<Seats> GetSeats(int parCode)
+        {
+            FlightManager bm = new FlightManager();
+            List<Seats> result = bm.GetSeats(parCode);
+            return result;
+        }
     }
 }

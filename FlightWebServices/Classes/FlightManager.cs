@@ -122,6 +122,78 @@ namespace FlightWebServices
             return result;
         }
 
+        public Travel GetTravelSelected(int parCode)
+        {
+            SqlConnection cnn = new SqlConnection();
+            string cnnString = System.Configuration.ConfigurationManager.ConnectionStrings["DemoConnectionString"].ConnectionString;
+            cnn.ConnectionString = cnnString;
+            cnn.Open();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Connection = cnn; cmd.CommandText = "Flight_GetTravelSelected";
+            cmd.Parameters.AddWithValue("@Code", parCode);
+
+            cmd.ExecuteNonQuery();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Travel travel = new Travel();
+                    travel.Code = reader.GetInt32(0);
+                    travel.Origin = reader.GetString(1);
+                    travel.Destination = reader.GetString(2);
+                    travel.Time_Departure = reader.GetDateTime(3);
+                    travel.Time_Arrived = reader.GetDateTime(4);
+                    travel.Duration = reader.GetTimeSpan(5);
+                    travel.MaxCapacity = reader.GetInt32(6);
+                    travel.MaxRow = reader.GetInt32(7);
+                    travel.MaxSeatsRow = reader.GetInt32(8);
+                    travel.CompanyID = reader.GetInt32(9);
+                    travel.Status = reader.GetBoolean(10);
+                    travel.CompanyName = reader.GetString(11);
+                    travel.Origin_Destination = reader.GetString(12);
+                    return travel;
+                }
+            }
+            return null;
+        }
+
+        public List<Seats> GetSeats(int parCode)
+        {
+            SqlConnection cnn = new SqlConnection();
+            string cnnString = System.Configuration.ConfigurationManager.ConnectionStrings["DemoConnectionString"].ConnectionString;
+            cnn.ConnectionString = cnnString;
+            cnn.Open();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Connection = cnn; cmd.CommandText = "Flight_GetSeats";
+            cmd.Parameters.AddWithValue("@Code", parCode);
+
+            cmd.ExecuteNonQuery();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            List<Seats> SeatsList = new List<Seats>();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Seats seat = new Seats();
+                    seat.Row = reader.GetInt32(0);
+                    seat.Seat = reader.GetString(1);
+                    seat.Full = reader.GetString(2);
+                    SmartAddSeat(SeatsList, seat);
+                }
+            }
+            return SeatsList;
+        }
+
         protected void SmartAddCust(List<Customer> list, Customer cust)
         {
             Customer detail = list.SingleOrDefault(d => d.Code == cust.Code && d.Name == cust.Name);
@@ -139,6 +211,16 @@ namespace FlightWebServices
             if (detail == null)
             {
                 list.Add(travel);
+            }
+        }
+
+        protected void SmartAddSeat(List<Seats> list, Seats seat)
+        {
+            Seats detail = list.SingleOrDefault(d => d.Row == seat.Row && d.Seat == seat.Seat);
+
+            if (detail == null)
+            {
+                list.Add(seat);
             }
         }
     }
